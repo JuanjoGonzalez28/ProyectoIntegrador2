@@ -3,37 +3,88 @@ session_start();
 header("Content-Type: application/json");
 require "../../config/database.php";
 
-/* =========================
-   CONSULTA ESTADO
-========================= */
-if ($_GET['accion'] ?? '' === 'estado') {
+/* =======================
+   LISTAR CANDIDATURAS
+======================= */
+if ($_GET['accion'] === 'listar') {
 
-    $respuesta = [
-        'tieneSesion' => isset($_SESSION['id_usuario']),
-        'total' => 0
-    ];
-
-    if (isset($_SESSION['id_usuario'])) {
-        $id = $_SESSION['id_usuario'];
-        $res = $conexion->query("SELECT COUNT(*) total FROM inscripciones WHERE id_usuario=$id");
-        $respuesta['total'] = $res->fetch_assoc()['total'];
+    if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'organizador') {
+        echo json_encode(['ok'=>false,'error'=>'No autorizado']);
+        exit;
     }
 
-    echo json_encode($respuesta);
+    $res = $conexion->query("
+        SELECT i.*, p.usuario
+        FROM inscripciones i
+        JOIN participantes p ON p.id_participante = i.id_usuario
+        ORDER BY i.fecha DESC
+    ");
+
+    echo json_encode([
+        'ok'=>true,
+        'candidaturas'=>$res->fetch_all(MYSQLI_ASSOC)
+    ]);
     exit;
 }
 
-/* =========================
-   GUARDAR INSCRIPCIÓN
-========================= */
+/* =======================
+   ACEPTAR
+======================= */
+if ($_GET['accion'] === 'aceptar') {
 
-// Si no hay sesión → crear usuario
+    $id = intval($_GET['id']);
+
+    $conexion->query("
+        UPDATE inscripciones
+        SET estado='ACEPTADO'
+        WHERE id_inscripcion=$id
+    ");
+
+    echo json_encode(['ok'=>true]);
+    exit;
+}
+
+/* =======================
+   RECHAZAR
+======================= */
+if ($_GET['accion'] === 'rechazar') {
+
+    $id = intval($_POST['id']);
+    $motivo = $_POST['motivo'];
+
+    $stmt = $conexion->prepare("
+        UPDATE inscripciones
+        SET estado='RECHAZADO', motivo_rechazo=?
+        WHERE id_inscripcion=?
+    ");
+    $stmt->bind_param("si", $motivo, $id);
+    $stmt->execute();
+
+    echo json_encode(['ok'=>true]);
+    exit;
+}
+
+/* =======================
+   NOMINAR
+======================= */
+if ($_GET['accion'] === 'nominar') {
+
+    $id = intval($_GET['id']);
+
+    $conexion->query("
+        UPDATE inscripciones
+        SET estado='NOMINADO'
+        WHERE id_inscripcion=$id
+    ");
+
+    echo json_encode(['ok'=>true]);
+    exit;
+}
+
+/* =======================
+   INSCRIPCIÓN ALUMNO
+======================= */
 if (!isset($_SESSION['id_usuario'])) {
-
-    if (empty($_POST['nombre_responsable']) || empty($_POST['contrasena'])) {
-        echo json_encode(['ok'=>false,'error'=>'Datos de usuario incompletos']);
-        exit;
-    }
 
     $hash = password_hash($_POST['contrasena'], PASSWORD_DEFAULT);
 
@@ -41,49 +92,28 @@ if (!isset($_SESSION['id_usuario'])) {
         INSERT INTO participantes (usuario, contrasena)
         VALUES (?,?)
     ");
-    $stmt->bind_param("ss", $_POST['nombre_responsable'], $hash);
+    $stmt->bind_param("ss", $_POST['usuario'], $hash);
     $stmt->execute();
 
     $_SESSION['id_usuario'] = $conexion->insert_id;
-    $_SESSION['usuario'] = $_POST['nombre_responsable'];
     $_SESSION['tipo'] = 'participante';
 }
 
 $id_usuario = $_SESSION['id_usuario'];
 
-/* Máximo 2 candidaturas */
-$res = $conexion->query("SELECT COUNT(*) total FROM inscripciones WHERE id_usuario=$id_usuario");
-if ($res->fetch_assoc()['total'] >= 2) {
-    echo json_encode(['ok'=>false,'error'=>'Has alcanzado el máximo de candidaturas']);
-    exit;
-}
-
-/* Guardar archivos */
-$dir = "../../uploads/";
-@mkdir($dir, 0777, true);
-
-$ficha = $dir . uniqid() . "_" . $_FILES['ficha']['name'];
-$cartel = $dir . uniqid() . "_" . $_FILES['cartel']['name'];
-
-move_uploaded_file($_FILES['ficha']['tmp_name'], $ficha);
-move_uploaded_file($_FILES['cartel']['tmp_name'], $cartel);
-
-/* Insertar inscripción */
 $stmt = $conexion->prepare("
     INSERT INTO inscripciones
-    (id_usuario, ficha, cartel, sinopsis, email, dni, expediente, video)
-    VALUES (?,?,?,?,?,?,?,?)
+    (id_usuario, sinopsis, email, dni, expediente, video)
+    VALUES (?,?,?,?,?,?)
 ");
 
 $stmt->bind_param(
-    "isssssss",
+    "isssss",
     $id_usuario,
-    $ficha,
-    $cartel,
     $_POST['sinopsis'],
-    $_POST['email'] ,
-    $_POST['dni'] ,
-    $_POST['expediente'] ,
+    $_POST['email'],
+    $_POST['dni'],
+    $_POST['expediente'],
     $_POST['video']
 );
 

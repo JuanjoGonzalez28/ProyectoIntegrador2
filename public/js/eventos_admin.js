@@ -1,7 +1,7 @@
 let eventoEditando = null;
 let eventoAEliminar = null;
 
-const BASE_URL_EVENTOS = "/ProyectoIntegrador2.1/app/controllers/EventoController.php";
+const BASE_URL_EVENTOS = "/ProyectoIntegrador2/app/controllers/EventoController.php";
 
 /* =========================
    CARGAR EVENTOS

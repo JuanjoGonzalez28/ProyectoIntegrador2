@@ -1,4 +1,4 @@
-const BASE_URL = "/ProyectoIntegrador2.1/app/controllers/GalaPublicController.php";
+const BASE_URL = "/ProyectoIntegrador2/app/controllers/GalaPublicController.php";
 
 document.addEventListener("DOMContentLoaded", () => {
     fetch(BASE_URL)

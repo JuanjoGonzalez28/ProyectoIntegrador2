@@ -33,7 +33,7 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
 
     const formData = new FormData(this);
 
-    fetch("/ProyectoIntegrador2.1/app/controllers/AuthController.php", {
+    fetch("/ProyectoIntegrador2/app/controllers/AuthController.php", {
         method: "POST",
         body: formData
     })

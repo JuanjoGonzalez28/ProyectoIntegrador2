@@ -71,7 +71,7 @@ if (menuToggle) menuToggle.addEventListener("click", () => {
     if (nav) nav.classList.toggle("open");
 });
 
-const BASE_URL_GALA = "/ProyectoIntegrador2.1/app/controllers/GalaController.php";
+const BASE_URL_GALA = "/ProyectoIntegrador2/app/controllers/GalaController.php";
 
 // Cargar modo y ocultar/mostrar control de fecha
 function cargarModo() {

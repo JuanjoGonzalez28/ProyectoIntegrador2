@@ -1,4 +1,4 @@
-const BASE_URL = "/ProyectoIntegrador2.1/app/controllers/NoticiasController.php";
+const BASE_URL = "/1/app/controllers/NoticiasController.php";
 
 let indiceActual = 0;
 let total = 0;

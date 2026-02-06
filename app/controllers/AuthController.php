@@ -12,12 +12,12 @@ $mapa = [
     'participante' => [
         'tabla' => 'participantes',
         'id'    => 'id_usuario',
-        'panel' => '/ProyectoIntegrador2.1/public/html/index.html'
+        'panel' => '/ProyectoIntegrador2/public/html/index.html'
     ],
     'organizador' => [
         'tabla' => 'organizadores',
         'id'    => 'id_organizador',
-        'panel' => '/ProyectoIntegrador2.1/public/html/panel_organizador.html'
+        'panel' => '/ProyectoIntegrador2/public/html/panel_organizador.html'
     ]
 ];
 

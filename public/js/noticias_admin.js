@@ -1,7 +1,7 @@
 let noticiaEditando = null;
 let noticiaAEliminar = null;
 
-const BASE_URL = "/ProyectoIntegrador2.1/app/controllers/NoticiasController.php";
+const BASE_URL = "/ProyectoIntegrador2/app/controllers/NoticiasController.php";
 
 /* =========================
    CARGAR NOTICIAS
