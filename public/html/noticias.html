@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Noticias</title>
+    <link rel="stylesheet" href="../css/noticias_publico.css">
+</head>
+
+<body>
+    <header class="ue-header">
+        <div class="main-nav">
+            <div class="logo">
+                <a href="index.php">
+                    <img src="../img/logo_uem.png" alt="Universidad Europea">
+                </a>
+            </div>
+
+            <nav class="nav-links">
+                <a href="noticias.html">Noticias</a>
+                <a href="eventos.html">Eventos</a>
+                <a href="premios.html">Premios</a>
+                <a href="gala.html">Gala</a>
+                <a href="ediciones.html">Ediciones anteriores</a>
+                <a href="inscripcion.html">Inscripción</a>
+
+                <select id="login">
+                    <option value="" selected disabled hidden>👤 Entrar</option>
+                    <option value="participante">Participante</option>
+                    <option value="organizador">Organizador</option>
+                </select>
+            </nav>
+        </div>
+    </header>
+    <section class="news-carousel">
+        <button class="carousel-btn prev" onclick="prevNoticia()">‹</button>
+
+        <div class="carousel-viewport">
+            <div class="carousel-track" id="newsTrack">
+                <!-- aquí se insertan las noticias -->
+            </div>
+        </div>
+
+        <button class="carousel-btn next" onclick="nextNoticia()">›</button>
+    </section>
+
+
+    <script src="../js/noticias_publico.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel Organizador</title>
+  <link rel="stylesheet" href="../css/panel_organizador.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    /* Pequeños estilos para errores y modal si no están en tu CSS */
+    .field-error { color: #c00; font-size: 0.9rem; display: block; margin-top: 4px; }
+    .error { color: #c00; }
+    .modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); z-index: 9999; }
+    .modal .modal-content { background:#fff; padding:18px; border-radius:8px; max-width:520px; width:90%; box-shadow:0 6px 24px rgba(0,0,0,0.2); }
+    .modal .modal-close { float:right; cursor:pointer; font-weight:bold; }
+  </style>
+</head>
+<body>
+
+  <header class="ue-header">
+    <div class="main-nav">
+      <div class="logo">
+        <img src="../img/logo_uem.png" alt="Universidad Europea">
+      </div>
+
+      <button class="menu-toggle" id="menuToggle">☰</button>
+
+      <nav class="nav-links" id="navLinks">
+        <button class="nav-item" onclick="mostrarSeccion('candidaturas')">Candidaturas</button>
+        <button class="nav-item" onclick="mostrarSeccion('eventos')">Eventos</button>
+        <button class="nav-item" onclick="mostrarSeccion('noticias')">Noticias</button>
+        <button class="nav-item" onclick="mostrarSeccion('premios')">Premios</button>
+        <button class="nav-item" onclick="mostrarSeccion('patrocinadores')">Patrocinadores</button>
+        <button class="nav-item" onclick="mostrarSeccion('gala')">Gala</button>
+        <a href="../../logout.php" class="nav-item logout">Cerrar sesión</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="content">
+    <h1>Panel de Organizador</h1>
+
+    <!-- CANDIDATURAS -->
+    <section id="candidaturas" class="activa">
+      <h2>Gestión de Candidaturas</h2>
+      <div id="listaCandidaturas"></div>
+    </section>
+
+    <!-- EVENTOS -->
+    <section id="eventos">
+      <h2>Gestión de Eventos</h2>
+      <button class="button" onclick="mostrarFormularioEvento()">Añadir evento</button>
+
+      <form id="formEvento" style="display:none;margin-top:20px;" class="validable">
+        <div class="campo">
+          <label>Título</label>
+          <input type="text" name="titulo">
+          <small class="error"></small>
+        </div>
+
+        <div class="campo">
+          <label>Descripción</label>
+          <textarea name="descripcion"></textarea>
+          <small class="error"></small>
+        </div>
+
+        <div class="campo">
+          <label>Fecha</label>
+          <input type="date" name="fecha">
+          <small class="error"></small>
+        </div>
+
+        <div class="campo">
+          <label>Hora</label>
+          <input type="time" name="hora">
+          <small class="error"></small>
+        </div>
+
+        <button class="button" type="submit">Guardar evento</button>
+        <button class="button" type="button" onclick="ocultarFormularioEvento()">Cancelar</button>
+        <p id="errorEvento" class="error"></p>
+      </form>
+
+      <div id="listaEventos"></div>
+    </section>
+
+    <!-- NOTICIAS -->
+    <section id="noticias">
+      <h2>Gestión de Noticias</h2>
+      <button class="button" onclick="mostrarFormularioNoticia()">Añadir noticia</button>
+
+      <form id="formNoticia" style="display:none;margin-top:20px;" class="validable">
+        <div class="campo">
+          <label>Título</label>
+          <input type="text" name="titulo">
+          <small class="error"></small>
+        </div>
+
+        <div class="campo">
+          <label>Descripción</label>
+          <textarea name="descripcion"></textarea>
+          <small class="error"></small>
+        </div>
+
+        <button class="button" type="submit">Guardar noticia</button>
+        <button class="button" type="button" onclick="ocultarFormulario()">Cancelar</button>
+        <p id="errorGeneral" class="error"></p>
+      </form>
+
+      <div id="listaNoticias"></div>
+    </section>
+
+    <!-- PREMIOS -->
+    <section id="premios">
+      <h3>Crear premio</h3>
+
+      <form id="formPremio">
+        <div class="campo">
+          <input type="text" name="nombre" placeholder="Nombre del premio">
+          <small class="error"></small>
+        </div>
+
+        <div class="campo">
+          <textarea name="descripcion" placeholder="Descripción"></textarea>
+          <small class="error"></small>
+        </div>
+
+        <button class="button" type="submit">Guardar premio</button>
+      </form>
+
+      <div id="listaPremios"></div>
+
+      <h3>Asignar ganador</h3>
+      <form id="formGanador">
+        <div class="campo">
+          <label>Premio</label>
+          <select name="id_premio"></select>
+        </div>
+
+        <div class="campo">
+          <label>Candidatura</label>
+          <select name="id_inscripcion"></select>
+        </div>
+
+        <button class="button" type="submit">Asignar ganador</button>
+      </form>
+
+      <div id="resultadoGanador"></div>
+    </section>
+
+    <!-- Modal de error (reutilizable) -->
+    <div id="modalError" class="modal">
+      <div class="modal-content">
+        <span class="modal-close" onclick="cerrarModalError()">✖</span>
+        <h3 id="modalErrorMessage">Error</h3>
+      </div>
+    </div>
+
+    <!-- PATROCINADORES -->
+    <section id="patrocinadores">
+      <h2>Gestión de Patrocinadores</h2>
+
+      <form id="formPatrocinador" enctype="multipart/form-data" class="validable">
+        <div class="campo">
+          <input type="text" name="nombre" placeholder="Nombre patrocinador">
+          <small class="error"></small>
+        </div>
+
+        <div class="campo">
+          <input type="file" name="logo">
+          <small class="error"></small>
+        </div>
+
+        <button class="button" type="submit">Guardar patrocinador</button>
+        <p id="errorGeneral" class="error"></p>
+      </form>
+
+      <div id="listaPatrocinadores"></div>
+    </section>
+
+    <!-- GALA -->
+    <section id="gala">
+      <h2>Gestión de Gala</h2>
+
+      <div style="margin-bottom:20px;">
+        <strong>Modo actual:</strong> <span id="modoActual"></span>
+        <button class="button" onclick="cambiarModo()">Cambiar modo</button>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <label for="fechaGlobal">Fecha de las secciones:</label>
+        <input type="date" id="fechaGlobal" onchange="setFechaGlobal()">
+        <span id="errorFecha" class="field-error" style="display:none"></span>
+      </div>
+
+      <!-- PRE-EVENTO -->
+      <div id="galaPre">
+        <h3>Pre-evento: Secciones</h3>
+        <button class="button" onclick="mostrarFormSeccion()">Añadir sección</button>
+
+        <form id="formSeccion" style="display:none;margin-top:15px;" class="validable">
+          <div class="campo">
+            <label>Título</label>
+            <input type="text" name="titulo" placeholder="Título">
+            <small class="error"></small>
+          </div>
+
+          <div class="campo">
+            <label>Fecha</label>
+            <input type="date" name="fecha">
+            <small class="error"></small>
+          </div>
+
+          <div class="campo">
+            <label>Hora</label>
+            <input type="time" name="hora" placeholder="Hora">
+            <small class="error"></small>
+          </div>
+
+          <div class="campo">
+            <label>Sala</label>
+            <input type="text" name="sala" placeholder="Sala">
+            <small class="error"></small>
+          </div>
+
+          <div class="campo">
+            <label>Descripción</label>
+            <textarea name="descripcion" placeholder="Descripción"></textarea>
+            <small class="error"></small>
+          </div>
+
+          <p id="errorSeccion" class="error"></p>
+          <button type="submit" class="button">Guardar sección</button>
+          <button type="button" class="button" onclick="ocultarFormSeccion()">Cancelar</button>
+        </form>
+
+        <div id="listaSecciones" style="margin-top:16px;"></div>
+      </div>
+
+      <!-- POST-EVENTO -->
+      <div id="galaPost" style="display:none;">
+        <h3>Post-evento</h3>
+
+        <h4>Texto resumen</h4>
+        <form id="formResumen">
+          <textarea name="texto" rows="5" required></textarea>
+          <button type="submit" class="button">Guardar resumen</button>
+        </form>
+
+        <h4>Galería de imágenes</h4>
+        <form id="formImagen" enctype="multipart/form-data">
+          <input type="file" name="imagen" accept="image/*" required>
+          <button type="submit" class="button">Subir imagen</button>
+        </form>
+
+        <h4>Edición final</h4>
+        <button class="button" onclick="guardarEdicion()">Añadir a ediciones anteriores</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modales de confirmación (ejemplos existentes en tu HTML) -->
+  <div id="modalBorrarNoticia" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" onclick="cerrarModalEliminar()">✖</span>
+      <h3>Eliminar noticia</h3>
+      <p>¿Seguro que quieres eliminar esta noticia?</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="cerrarModalEliminar()">Cancelar</button>
+        <button class="btn-danger" onclick="eliminarNoticiaConfirmada()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalBorrarEvento" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" onclick="cerrarModalEliminarEvento()">✖</span>
+      <h3>Eliminar evento</h3>
+      <p>¿Seguro que quieres eliminar este evento?</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="cerrarModalEliminarEvento()">Cancelar</button>
+        <button class="btn-danger" onclick="eliminarEventoConfirmado()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ui.js debe existir en public/js/ui.js -->
+  <script src="../js/ui.js"></script>
+
+
+
+  <!-- panel_organizador.js y demás scripts -->
+  <script src="../js/panel_organizador.js"></script>
+  <script src="../js/candidaturas.js"></script>
+  <script src="../js/noticias_admin.js"></script>
+  <script src="../js/eventos_admin.js"></script>
+  <script src="../js/premios.js"></script>
+  <script src="../js/patrocinadores.js"></script>
+</body>
+</html>
+
+            </div> <!-- ================= POST-EVENTO ================= -->
+            <div id="galaPost" style="display:none;">
+                <h3>Post-evento</h3>
+                <h4>Texto resumen</h4>
+                <form id="formResumen"> <textarea name="texto" rows="5" required></textarea> <button
+                        type="submit">Guardar resumen</button> </form>
+                <h4>Galería de imágenes</h4>
+                <form id="formImagen" enctype="multipart/form-data"> <input type="file" name="imagen" accept="image/*"
+                        required> <button type="submit">Subir imagen</button> </form>
+                <h4>Edición final</h4> <button onclick="guardarEdicion()">Añadir a ediciones anteriores</button>
+            </div>
+        </section>
+
+
+
+    </main>
+    <div id="modalBorrarNoticia" class="modal hidden">
+        <div class="modal-content">
+            <span class="modal-close" onclick="cerrarModalEliminar()">✖</span>
+
+            <h3>Eliminar noticia</h3>
+            <p>¿Seguro que quieres eliminar esta noticia?</p>
+
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="cerrarModalEliminar()">Cancelar</button>
+
+                <button class="btn-danger" onclick="eliminarNoticiaConfirmada()">Eliminar</button>
+
+            </div>
+        </div>
+    </div>
+    <div id="modalBorrarEvento" class="modal hidden">
+            <div class="modal-content">
+                <span class="modal-close" onclick="cerrarModalEliminarEvento()">✖</span>
+
+                <h3>Eliminar evento</h3>
+                <p>¿Seguro que quieres eliminar este evento?</p>
+
+                <div class="modal-actions">
+                    <button class="btn-secondary" onclick="cerrarModalEliminarEvento()">
+                        Cancelar
+                    </button>
+
+                    <button class="btn-danger" onclick="eliminarEventoConfirmado()">
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    <script src="../js/panel_organizador.js"></script>
+    <script src="../js/candidaturas.js"></script>
+    <script src="../js/noticias_admin.js"></script>
+    <script src="../js/eventos_admin.js"></script>
+    <script src="../js/premios.js"></script>
+    <script src="../js/patrocinadores.js"></script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,113 @@
+@import url("https://db.onlinewebfonts.com/c/a2021d3d882d11183ba0b0ff3f95f984?family=Hellix");
+
+.ue-header {
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+    font-family: 'Hellix', Helvetica, Arial, sans-serif;
+    margin-top: 0px;
+}
+
+
+.main-nav {
+    max-width: 1200px;
+    margin: auto;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo img {
+    height: 64px;
+}
+
+.nav-links a,
+.nav-links select {
+    margin-left: 15px;
+    text-decoration: none;
+    color: #1E1E1E;
+    font-weight: bold;
+}
+
+.nav-links select {
+    border: none;
+}
+body {
+    margin: 0;
+    font-family: Helvetica, Arial, sans-serif;
+    background: #f4f4f4;
+}
+
+/* =========================
+   CONTENEDOR GENERAL
+========================= */
+.news-carousel {
+    position: relative;
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 60px 110px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.12);
+}
+
+/* SOLO MUESTRA UNA */
+.carousel-viewport {
+    overflow: hidden;
+}
+
+/* TODAS EN FILA */
+.carousel-track {
+    display: flex;
+    transition: transform 0.6s ease;
+}
+
+/* CADA NOTICIA */
+.news-slide {
+    min-width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+}
+
+/* TEXTO */
+.news-text h2 {
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+}
+
+/* IMAGEN */
+.news-image img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 16px;
+}
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: none;
+    background: #c8102e;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 8px 20px rgba(0,0,0,.25);
+}
+
+.carousel-btn.prev {
+    left: 30px;
+}
+
+.carousel-btn.next {
+    right: 30px;
+}
+
+.carousel-btn:hover {
+    background: #a50d26;
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gala – Festival de Cortos UEM</title>
+
+    <!-- CSS UE (reutilizamos el estilo que ya usáis) -->
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/panel_organizador.css">
+</head>
+
+<body>
+
+<header class="ue-header">
+    <div class="main-nav">
+        <div class="logo">
+            <a href="../index.php">
+                <img src="../img/logo_uem.png" alt="Universidad Europea">
+            </a>
+        </div>
+
+        <nav class="nav-links">
+            <a href="noticias.html">Noticias</a>
+            <a href="eventos.html">Eventos</a>
+            <a href="premios.html">Premios</a>
+            <a href="gala.html">Gala</a>
+            <a href="ediciones.html">Ediciones anteriores</a>
+            <a href="inscripcion.html">Inscripción</a>
+        </nav>
+    </div>
+</header>
+
+<main class="content">
+
+    <h1>Gala del Festival</h1>
+
+    <!-- ================= PRE EVENTO ================= -->
+    <section id="galaPrePublico">
+        <h2>Programa de la Gala</h2>
+        <div id="programaGala"></div>
+    </section>
+
+    <!-- ================= POST EVENTO ================= -->
+    <section id="galaPostPublico" style="display:none;">
+        <h2>Así fue la Gala</h2>
+
+        <p id="textoResumen"></p>
+
+        <h3>Galería</h3>
+        <div id="galeria" class="bloques"></div>
+    </section>
+
+</main>
+
+<script src="../js/gala_publica.js"></script>
+</body>
+</html>
