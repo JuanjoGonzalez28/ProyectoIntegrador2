@@ -31,7 +31,7 @@ function mostrarSeccion(id) {
     if (id === 'eventos') cargarEventos();
     if (id === 'premios') {
         cargarPremios();
-        cargarCandidaturas();
+        cargarNominadas();
     }
     if (id === 'patrocinadores') cargarPatrocinadores();
     if (id === 'gala') cargarModo();
