@@ -1,4 +1,7 @@
-const BASE_URL = "/1/app/controllers/NoticiasController.php";
+const BASE_URL = "../app/controllers/NoticiasController.php";
+
+console.log("NOTICIAS PUBLICO JS CARGADO");
+
 
 let indiceActual = 0;
 let total = 0;
