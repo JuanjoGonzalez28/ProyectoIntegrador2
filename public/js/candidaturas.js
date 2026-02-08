@@ -1,4 +1,4 @@
-var URL_INS = "/ProyectoIntegrador2/app/controllers/InscripcionController.php";
+const URL_INS = "/ProyectoIntegrador2/app/controllers/InscripcionController.php";
 
 function cargarCandidaturas() {
 

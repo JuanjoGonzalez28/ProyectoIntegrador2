@@ -4,20 +4,19 @@ header("Content-Type: application/json; charset=UTF-8");
 
 require "../../config/database.php";
 
-/* SOLO ORGANIZADOR */
 if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'organizador') {
-    echo json_encode(['ok' => false, 'error' => 'No autorizado']);
+    echo json_encode(['ok'=>false,'error'=>'No autorizado']);
     exit;
 }
 
 $accion = $_GET['accion'] ?? '';
 
 /* =========================
-   ESTADO
+   ESTADO GALA
 ========================= */
 if ($accion === 'estado') {
-    $res = $conexion->query("SELECT modo FROM gala WHERE id = 1");
-    echo json_encode(['ok' => true, 'modo' => $res->fetch_assoc()['modo']]);
+    $res = $conexion->query("SELECT modo FROM gala WHERE id=1");
+    echo json_encode(['ok'=>true,'modo'=>$res->fetch_assoc()['modo']]);
     exit;
 }
 
@@ -25,114 +24,112 @@ if ($accion === 'estado') {
    CAMBIAR MODO
 ========================= */
 if ($accion === 'cambiarModo') {
-    $res = $conexion->query("SELECT modo FROM gala WHERE id = 1");
-    $actual = $res->fetch_assoc()['modo'];
-    $nuevo = $actual === 'PRE' ? 'POST' : 'PRE';
-
-    $stmt = $conexion->prepare("UPDATE gala SET modo = ? WHERE id = 1");
-    $stmt->bind_param("s", $nuevo);
+    $modo = $conexion->query("SELECT modo FROM gala WHERE id=1")->fetch_assoc()['modo'];
+    $nuevo = $modo === 'PRE' ? 'POST' : 'PRE';
+    $stmt = $conexion->prepare("UPDATE gala SET modo=? WHERE id=1");
+    $stmt->bind_param("s",$nuevo);
     $stmt->execute();
-
-    echo json_encode(['ok' => true, 'modo' => $nuevo]);
+    echo json_encode(['ok'=>true]);
     exit;
 }
 
 /* =========================
-   CREAR SECCIÓN
+   SECCIONES PRE
 ========================= */
 if ($accion === 'crearSeccion') {
-    $titulo = trim($_POST['titulo'] ?? '');
-    $hora = trim($_POST['hora'] ?? '');
-    $sala = trim($_POST['sala'] ?? '');
-    $descripcion = trim($_POST['descripcion'] ?? '');
-
-    $errors = [];
-    if ($titulo === '') $errors['titulo'] = 'Título obligatorio';
-    if ($hora === '') $errors['hora'] = 'Hora obligatoria';
-    if ($sala === '') $errors['sala'] = 'Sala obligatoria';
-    if ($descripcion === '') $errors['descripcion'] = 'Descripción obligatoria';
-
-    if ($errors) {
-        echo json_encode(['ok' => false, 'errors' => $errors]);
-        exit;
-    }
-
-    // Conflicto: misma hora + sala
-    $check = $conexion->prepare("
-        SELECT id FROM gala_secciones
-        WHERE hora = ? AND sala = ?
-    ");
-    $check->bind_param("ss", $hora, $sala);
-    $check->execute();
-    if ($check->get_result()->num_rows > 0) {
-        echo json_encode(['ok' => false, 'errors' => ['hora' => 'Ya existe una sección en esa sala y hora']]);
-        exit;
-    }
-
     $stmt = $conexion->prepare("
         INSERT INTO gala_secciones (titulo, hora, sala, descripcion)
-        VALUES (?, ?, ?, ?)
+        VALUES (?,?,?,?)
     ");
-    $stmt->bind_param("ssss", $titulo, $hora, $sala, $descripcion);
+    $stmt->bind_param("ssss",
+        $_POST['titulo'],
+        $_POST['hora'],
+        $_POST['sala'],
+        $_POST['descripcion']
+    );
     $stmt->execute();
-
-    echo json_encode(['ok' => true]);
+    echo json_encode(['ok'=>true]);
     exit;
 }
 
-/* =========================
-   LISTAR SECCIONES
-========================= */
 if ($accion === 'listarSecciones') {
-    $res = $conexion->query("
-        SELECT * FROM gala_secciones
-        ORDER BY hora
-    ");
-    echo json_encode(['ok' => true, 'secciones' => $res->fetch_all(MYSQLI_ASSOC)]);
+    $res = $conexion->query("SELECT * FROM gala_secciones ORDER BY hora");
+    echo json_encode(['ok'=>true,'secciones'=>$res->fetch_all(MYSQLI_ASSOC)]);
     exit;
 }
 
-/* =========================
-   BORRAR SECCIÓN
-========================= */
 if ($accion === 'borrarSeccion') {
-    $id = intval($_GET['id'] ?? 0);
-    $stmt = $conexion->prepare("DELETE FROM gala_secciones WHERE id = ?");
-    $stmt->bind_param("i", $id);
+    $id = intval($_GET['id']);
+    $stmt = $conexion->prepare("DELETE FROM gala_secciones WHERE id_seccion=?");
+    $stmt->bind_param("i",$id);
     $stmt->execute();
-
-    echo json_encode(['ok' => true]);
+    echo json_encode(['ok'=>true]);
     exit;
 }
 
 /* =========================
-   GUARDAR RESUMEN
-========================= */
-if ($accion === 'guardarResumen') {
-    $stmt = $conexion->prepare("UPDATE gala SET texto_resumen = ? WHERE id = 1");
-    $stmt->bind_param("s", $_POST['texto']);
-    $stmt->execute();
-    echo json_encode(['ok' => true]);
-    exit;
-}
-
-/* =========================
-   SUBIR IMAGEN
+   POST-GALA IMÁGENES
 ========================= */
 if ($accion === 'subirImagen') {
     $dir = "../../uploads/";
-    if (!is_dir($dir)) mkdir($dir, 0777, true);
+    if (!is_dir($dir)) mkdir($dir,0777,true);
 
-    $nombre = uniqid() . "_" . basename($_FILES['imagen']['name']);
-    move_uploaded_file($_FILES['imagen']['tmp_name'], $dir . $nombre);
+    $nombre = uniqid()."_".$_FILES['imagen']['name'];
+    move_uploaded_file($_FILES['imagen']['tmp_name'],$dir.$nombre);
 
     $stmt = $conexion->prepare("INSERT INTO gala_imagenes (ruta) VALUES (?)");
-    $stmt->bind_param("s", $nombre);
+    $stmt->bind_param("s",$nombre);
     $stmt->execute();
 
-    echo json_encode(['ok' => true]);
+    echo json_encode(['ok'=>true]);
     exit;
 }
 
-echo json_encode(['ok' => false, 'error' => 'Acción no válida']);
-exit;
+if ($accion === 'listarImagenes') {
+    $res = $conexion->query("SELECT * FROM gala_imagenes ORDER BY id DESC");
+    echo json_encode(['ok'=>true,'imagenes'=>$res->fetch_all(MYSQLI_ASSOC)]);
+    exit;
+}
+
+if ($accion === 'borrarImagen') {
+    $id = intval($_GET['id']);
+    $res = $conexion->query("SELECT ruta FROM gala_imagenes WHERE id=$id");
+    if ($img = $res->fetch_assoc()) {
+        @unlink("../../uploads/".$img['ruta']);
+        $conexion->query("DELETE FROM gala_imagenes WHERE id=$id");
+    }
+    echo json_encode(['ok'=>true]);
+    exit;
+}
+
+/* =========================
+   GUARDAR EDICIÓN
+========================= */
+if ($accion === 'guardarEdicion') {
+
+    $texto = $conexion->query("SELECT texto_resumen FROM gala WHERE id=1")
+        ->fetch_assoc()['texto_resumen'];
+
+    $stmt = $conexion->prepare("INSERT INTO ediciones (texto) VALUES (?)");
+    $stmt->bind_param("s",$texto);
+    $stmt->execute();
+    $idEdicion = $stmt->insert_id;
+
+    $imgs = $conexion->query("SELECT ruta FROM gala_imagenes");
+    while ($img = $imgs->fetch_assoc()) {
+        $stmt = $conexion->prepare("
+            INSERT INTO ediciones_imagenes (id_edicion,ruta)
+            VALUES (?,?)
+        ");
+        $stmt->bind_param("is",$idEdicion,$img['ruta']);
+        $stmt->execute();
+    }
+
+    $conexion->query("DELETE FROM gala_imagenes");
+    $conexion->query("UPDATE gala SET texto_resumen=NULL");
+
+    echo json_encode(['ok'=>true]);
+    exit;
+}
+
+echo json_encode(['ok'=>false,'error'=>'Acción no válida']);

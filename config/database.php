@@ -98,15 +98,10 @@ CREATE TABLE IF NOT EXISTS gala_imagenes (
     ruta VARCHAR(255)
 );
 
-INSERT INTO gala (id, modo)
-SELECT 1, 'PRE'
-WHERE NOT EXISTS (SELECT 1 FROM gala WHERE id = 1);
-
-
 CREATE TABLE IF NOT EXISTS ediciones (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    fecha DATE NOT NULL,
-    texto_resumen TEXT
+    texto TEXT,
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS ediciones_imagenes (
@@ -115,6 +110,11 @@ CREATE TABLE IF NOT EXISTS ediciones_imagenes (
     ruta VARCHAR(255),
     FOREIGN KEY (id_edicion) REFERENCES ediciones(id) ON DELETE CASCADE
 );
+
+INSERT INTO gala (id, modo)
+SELECT 1, 'PRE'
+WHERE NOT EXISTS (SELECT 1 FROM gala WHERE id = 1);
+
 
 
 

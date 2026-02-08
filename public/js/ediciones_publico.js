@@ -1,27 +1,3 @@
-<header class="ue-header">
-    <div class="main-nav">
-        <div class="logo">
-            <a href="../index.php">
-                <img src="../img/logo_uem.png" alt="Universidad Europea">
-            </a>
-        </div>
-
-        <nav class="nav-links">
-            <a href="noticias.html">Noticias</a>
-            <a href="eventos.html">Eventos</a>
-            <a href="premios.html">Premios</a>
-            <a href="gala.html">Gala</a>
-            <a href="ediciones.html">Ediciones anteriores</a>
-            <a href="inscripcion.html">Inscripción</a>
-
-            <select id="login">
-                <option value="" selected disabled hidden>👤 Entrar</option>
-                <option value="participante">Participante</option>
-                <option value="organizador">Organizador</option>
-            </select>
-        </nav>
-    </div>
-</header>
 
 
 fetch("/ProyectoIntegrador2/app/controllers/EdicionesPublicController.php")
