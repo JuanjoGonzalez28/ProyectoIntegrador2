@@ -247,10 +247,14 @@
         </form>
 
         <h4>Galería de imágenes</h4>
-        <form id="formImagen" enctype="multipart/form-data">
-          <input type="file" name="imagen" accept="image/*" required>
-          <button type="submit" class="button">Subir imagen</button>
-        </form>
+
+<form id="formImagen" enctype="multipart/form-data">
+  <input type="file" name="imagen" accept="image/*" required>
+  <button type="submit" class="button">Subir imagen</button>
+</form>
+
+<div id="listaImagenesGala" class="bloques"></div>
+
 
         <h4>Edición final</h4>
         <button class="button" onclick="guardarEdicion()">Añadir a ediciones anteriores</button>

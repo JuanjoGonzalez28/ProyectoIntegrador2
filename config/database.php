@@ -103,6 +103,20 @@ SELECT 1, 'PRE'
 WHERE NOT EXISTS (SELECT 1 FROM gala WHERE id = 1);
 
 
+CREATE TABLE IF NOT EXISTS ediciones (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    fecha DATE NOT NULL,
+    texto_resumen TEXT
+);
+
+CREATE TABLE IF NOT EXISTS ediciones_imagenes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_edicion INT,
+    ruta VARCHAR(255),
+    FOREIGN KEY (id_edicion) REFERENCES ediciones(id) ON DELETE CASCADE
+);
+
+
 
 ";
 

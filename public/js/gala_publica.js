@@ -38,7 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 data.imagenes.forEach(img => {
                     galeria.innerHTML += `
                         <div class="bloque">
-                            <img src="../../uploads/${img.ruta}" style="width:100%">
+                            <img src="/ProyectoIntegrador2/uploads/${img.ruta}">
+
                         </div>
                     `;
                 });
