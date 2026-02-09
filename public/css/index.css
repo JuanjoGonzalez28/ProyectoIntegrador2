@@ -163,3 +163,16 @@ body {
 .news-carousel {
     margin-top: 60px;
 }
+
+.noticias-section {
+    width: 100%;
+    padding: 60px 20px;
+    background: #ffffff;
+    margin-top: 60px;
+    text-align: center;
+}
+
+.news-carousel {
+    max-width: 1100px;
+    margin: 0 auto;
+}

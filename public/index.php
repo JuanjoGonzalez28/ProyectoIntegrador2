@@ -68,24 +68,6 @@
         <button class="carousel-btn next" onclick="nextNoticia()">›</button>
     </section>
 
-    <!-- ================= BLOQUES ================= -->
-    <section class="bloques">
-
-        <!-- BLOQUE NOTICIAS ELIMINADO -->
-
-        <div class="bloque">
-            <h2>Eventos</h2>
-            <p>Consulta el calendario completo.</p>
-            <a href="html/eventos.html">Ver eventos</a>
-        </div>
-
-        <div class="bloque">
-            <h2>Premios</h2>
-            <p>Categorías y galardones.</p>
-            <a href="html/premios.html">Ver premios</a>
-        </div>
-    </section>
-
 </main>
 
 <!-- ================= FOOTER UE ================= -->

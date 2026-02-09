@@ -1,12 +1,13 @@
-const BASE_URL = "../app/controllers/NoticiasController.php";
+const BASE_URL = "/ProyectoIntegrador2/app/controllers/NoticiasController.php";
 
 console.log("NOTICIAS PUBLICO JS CARGADO");
-
 
 let indiceActual = 0;
 let total = 0;
 
 document.addEventListener("DOMContentLoaded", () => {
+
+    // Cargar noticias desde el backend
     fetch(`${BASE_URL}?accion=listar`)
         .then(r => r.json())
         .then(data => {
@@ -24,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
 
                         <div class="news-image">
-                            <img src="../img/noticias/${imagenAleatoria()}" alt="">
+                            <img src="/ProyectoIntegrador2/public/img/noticias/${imagenAleatoria()}" alt="">
                         </div>
                     </article>
                 `;
@@ -32,17 +33,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
             total = data.noticias.length;
             actualizarCarrusel();
-
-            setInterval(nextNoticia, 6000);
         });
+
+    // Activar botones
+    document.getElementById("nextBtn").addEventListener("click", nextNoticia);
+    document.getElementById("prevBtn").addEventListener("click", prevNoticia);
+
+    // Auto‑carrusel cada 6s
+    setInterval(nextNoticia, 6000);
 });
 
 /* =========================
    CARRUSEL
 ========================= */
 function actualizarCarrusel() {
-    document.getElementById("newsTrack").style.transform =
-        `translateX(-${indiceActual * 100}%)`;
+    const track = document.getElementById("newsTrack");
+    track.style.transform = `translateX(-${indiceActual * 100}%)`;
 }
 
 function nextNoticia() {

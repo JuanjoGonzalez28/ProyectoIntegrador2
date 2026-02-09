@@ -16,14 +16,12 @@
 <header class="ue-header">
     <div class="main-nav">
         <div class="logo">
-            <a href="index.php">
+            <a href="index.html">
                 <img src="../img/logo_uem.png" alt="Universidad Europea">
             </a>
         </div>
 
         <nav class="nav-links">
-            <!-- Noticias ELIMINADO -->
-            <a href="eventos.html">Eventos</a>
             <a href="premios.html">Premios</a>
             <a href="gala.html">Gala</a>
             <a href="ediciones.html">Ediciones anteriores</a>
@@ -47,38 +45,31 @@
         </a>
     </section>
 
-    <!-- ================= NOTICIAS INTEGRADAS ================= -->
-    <section id="noticiasIndex" class="news-carousel" style="margin-top: 80px;">
-        <h2 style="margin-bottom: 20px;">Últimas noticias</h2>
+    <!--El carrusel -->
+    
+    <section style="margin-top: 80px;">
+    
+        <div class="news-carousel">
 
-        <button class="carousel-btn prev" onclick="prevNoticia()">‹</button>
+        <div class="news-header">
+            <h1>Últimas noticias</h1>
+        </div>
+
+        <button id="prevBtn" class="carousel-btn prev">‹</button>
 
         <div class="carousel-viewport">
-            <div class="carousel-track" id="newsTrack">
+            <div id="newsTrack" class="carousel-track">
                 <!-- Noticias cargadas dinámicamente -->
             </div>
         </div>
 
-        <button class="carousel-btn next" onclick="nextNoticia()">›</button>
-    </section>
+        <button id="nextBtn" class="carousel-btn next">›</button>
 
-    <!-- ================= BLOQUES ================= -->
-    <section class="bloques">
+    </div>
 
-        <!-- BLOQUE NOTICIAS ELIMINADO -->
+</section>
 
-        <div class="bloque">
-            <h2>Eventos</h2>
-            <p>Consulta el calendario completo.</p>
-            <a href="eventos.html">Ver eventos</a>
-        </div>
 
-        <div class="bloque">
-            <h2>Premios</h2>
-            <p>Categorías y galardones.</p>
-            <a href="premios.html">Ver premios</a>
-        </div>
-    </section>
 
 </main>
 
@@ -95,8 +86,6 @@
             <div class="ue-footer-col">
                 <h3>Festival</h3>
                 <ul>
-                    <!-- Noticias ELIMINADO -->
-                    <li><a href="eventos.html">Eventos</a></li>
                     <li><a href="premios.html">Premios</a></li>
                     <li><a href="gala.html">Gala</a></li>
                     <li><a href="ediciones.html">Ediciones anteriores</a></li>
